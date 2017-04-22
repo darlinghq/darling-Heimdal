@@ -245,6 +245,26 @@ add_library(heim_roken OBJECT
 )
 make_fat(heim_roken)
 
+add_library(heim_vers OBJECT
+	lib/vers/print_version.c
+)
+make_fat(heim_vers)
+
+add_library(heim_error-tables OBJECT
+	gen/asn1_err.c
+	gen/gkrb5_err.c
+	gen/hc_err.c
+	gen/hdb_err.c
+	gen/heim_err.c
+	gen/hx509_err.c
+	gen/k524_err.c
+	gen/kadm5_err.c
+	gen/krb5_err.c
+	gen/wind_err.c
+	gen/krb_err.c
+)
+make_fat(heim_error-tables)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -259,6 +279,8 @@ add_framework(Heimdal
 		$<TARGET_OBJECTS:heim_asn1-defs>
 		$<TARGET_OBJECTS:heim_com_err>
 		$<TARGET_OBJECTS:heim_roken>
+		$<TARGET_OBJECTS:heim_vers>
+		$<TARGET_OBJECTS:heim_error-tables>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
