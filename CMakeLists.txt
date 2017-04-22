@@ -206,6 +206,45 @@ add_library(heim_com_err OBJECT
 )
 make_fat(heim_com_err)
 
+add_library(heim_roken OBJECT
+	lib/roken/base64.c
+	lib/roken/cloexec.c
+	lib/roken/concat.c
+	lib/roken/ecalloc.c
+	lib/roken/emalloc.c
+	lib/roken/environment.c
+	lib/roken/eread.c
+	lib/roken/erealloc.c
+	lib/roken/esetenv.c
+	lib/roken/estrdup.c
+	lib/roken/ewrite.c
+	lib/roken/get_default_username.c
+	lib/roken/hex.c
+	lib/roken/issuid.c
+	lib/roken/net_read.c
+	lib/roken/net_write.c
+	lib/roken/parse_bytes.c
+	lib/roken/parse_time.c
+	lib/roken/parse_units.c
+	lib/roken/getnameinfo_verified.c
+	lib/roken/strlwr.c
+	lib/roken/strpool.c
+	lib/roken/strsep_copy.c
+	lib/roken/strupr.c
+	lib/roken/resolve.c
+	lib/roken/socket.c
+	lib/roken/bswap.c
+	lib/roken/roken_gethostby.c
+	lib/roken/closefrom.c
+	lib/roken/rtbl.c
+	lib/roken/dumpdata.c
+	lib/roken/xfree.c
+	lib/roken/ct.c
+	lib/roken/rand.c
+	lib/roken/rkcf.c
+)
+make_fat(heim_roken)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -219,6 +258,7 @@ add_framework(Heimdal
 		$<TARGET_OBJECTS:heim_wind>
 		$<TARGET_OBJECTS:heim_asn1-defs>
 		$<TARGET_OBJECTS:heim_com_err>
+		$<TARGET_OBJECTS:heim_roken>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
