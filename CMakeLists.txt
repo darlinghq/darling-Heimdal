@@ -188,6 +188,18 @@ add_library(heim_wind OBJECT
 )
 make_fat(heim_wind)
 
+add_library(heim_asn1-defs OBJECT
+	gen/asn1_gssapi_asn1.c
+	gen/asn1_krb5_asn1.c
+	gen/asn1_pkcs8_asn1.c
+	gen/asn1_pkcs9_asn1.c
+	gen/asn1_pkcs12_asn1.c
+	gen/asn1_pkinit_asn1.c
+	gen/asn1_spnego_asn1.c
+	gen/asn1_pku2u_asn1.c
+)
+make_fat(heim_asn1-defs)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -199,6 +211,7 @@ add_framework(Heimdal
 		$<TARGET_OBJECTS:heim_heimcred>
 		$<TARGET_OBJECTS:heim_krb5>
 		$<TARGET_OBJECTS:heim_wind>
+		$<TARGET_OBJECTS:heim_asn1-defs>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
