@@ -182,6 +182,12 @@ add_library(heim_krb5 OBJECT
 )
 make_fat(heim_krb5)
 
+add_library(heim_wind OBJECT
+	lib/wind/utf8.c
+	lib/wind/icu.c
+)
+make_fat(heim_wind)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -192,6 +198,7 @@ add_framework(Heimdal
 	SOURCES
 		$<TARGET_OBJECTS:heim_heimcred>
 		$<TARGET_OBJECTS:heim_krb5>
+		$<TARGET_OBJECTS:heim_wind>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
