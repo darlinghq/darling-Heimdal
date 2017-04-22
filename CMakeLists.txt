@@ -200,6 +200,12 @@ add_library(heim_asn1-defs OBJECT
 )
 make_fat(heim_asn1-defs)
 
+add_library(heim_com_err OBJECT
+	lib/com_err/com_err.c
+	lib/com_err/error.c
+)
+make_fat(heim_com_err)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -212,6 +218,7 @@ add_framework(Heimdal
 		$<TARGET_OBJECTS:heim_krb5>
 		$<TARGET_OBJECTS:heim_wind>
 		$<TARGET_OBJECTS:heim_asn1-defs>
+		$<TARGET_OBJECTS:heim_com_err>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
