@@ -42,7 +42,10 @@
 
 #include <pkinit_asn1.h>
 
+#warning this file has been edited so that it doesn't depend on official corecrypto headers\
+and it doesn't function properly because of it
 
+#if 0
 struct _krb5_pfs_data {
     ccec25519secretkey x25519priv;
     ccec25519pubkey x25519pub;
@@ -55,6 +58,7 @@ struct _krb5_pfs_data {
     krb5_principal client;
     KRB5_PFS_GROUP group;
 };
+#endif
 
 #define PFS_X25519	1
 #define PFS_P256	2
@@ -125,6 +129,7 @@ _krb5_auth_con_setup_pfs(krb5_context context,
 			 krb5_auth_context auth_context,
 			 krb5_enctype enctype)
 {
+#if 0
     ccec_const_cp_t cp = ccec_cp_256();
     struct ccrng_state *rng = ccDRBGGetRngState();
     struct _krb5_pfs_data *pfs = NULL;
@@ -171,7 +176,7 @@ _krb5_auth_con_setup_pfs(krb5_context context,
     }
 
     auth_context->pfs = pfs;
-
+#endif
     return 0;
 }
 
@@ -182,6 +187,7 @@ _krb5_auth_con_setup_pfs(krb5_context context,
 void
 _krb5_auth_con_free_pfs(krb5_context context, krb5_auth_context auth_context)
 {
+#if 0
     if (auth_context->pfs) {
 	free(auth_context->pfs->p256._full);
 	krb5_free_keyblock_contents(context, &auth_context->pfs->keyblock);
@@ -191,6 +197,7 @@ _krb5_auth_con_free_pfs(krb5_context context, krb5_auth_context auth_context)
 	free(auth_context->pfs);
 	auth_context->pfs = NULL;
     }
+#endif
 }
 
 /*
@@ -203,6 +210,7 @@ pfs_make_share_secret(krb5_context context,
 		      krb5_enctype enctype,
 		      KRB5_PFS_SELECTION *peer)
 {
+#if 0
     struct _krb5_pfs_data *pfs = auth_context->pfs;
     krb5_data shared_secret;
     krb5_error_code ret;
@@ -283,6 +291,8 @@ pfs_make_share_secret(krb5_context context,
     krb5_data_free(&shared_secret);
 
     return ret;
+#endif
+return HEIM_PFS_GROUP_INVALID;
 }
 
 /*
@@ -295,6 +305,7 @@ _krb5_pfs_update_key(krb5_context context,
 		     const char *direction,
 		     krb5_keyblock *subkey)
 {
+#if 0
     struct _krb5_pfs_data *pfs = auth_context->pfs;
     krb5_keyblock newkey;
     krb5_error_code ret;
@@ -327,7 +338,7 @@ _krb5_pfs_update_key(krb5_context context,
     *subkey = newkey;
 
     _krb5_debug_keyblock(context, 20, direction, subkey);
-
+#endif
     return 0;
 }
 
@@ -335,8 +346,11 @@ static krb5_error_code
 fill_x25519_proposal(KRB5_PFS_SELECTION *sel, 
 		     ccec25519pubkey pubkey)
 {
+#if 0
     sel->group = KRB5_PFS_X25519;
     return krb5_data_copy(&sel->public_key, pubkey, sizeof(ccec25519pubkey));
+#endif
+return HEIM_PFS_GROUP_INVALID;
 }
 
 static krb5_error_code
@@ -366,14 +380,14 @@ fill_nist_proposal(krb5_context context,
     krb5_error_code ret;
 
     sel->group = group;
-    sel->public_key.length = ccec_export_pub_size(fullkey);
+    //sel->public_key.length = ccec_export_pub_size(fullkey);
     sel->public_key.data = malloc(sel->public_key.length);
     if (sel->public_key.data == NULL) {
 	ret = krb5_enomem(context);
 	goto out;
     }
 
-    ccec_export_pub(fullkey, sel->public_key.data);
+    //ccec_export_pub(fullkey, sel->public_key.data);
     ret = 0;
 
  out:
@@ -433,6 +447,7 @@ _krb5_pfs_ap_req(krb5_context context,
 		 krb5_const_principal client,
 		 AuthorizationData *output)
 {
+#if 0
     struct _krb5_pfs_data *pfs = auth_context->pfs;
     AuthorizationDataElement ade;
     krb5_crypto crypto = NULL;
@@ -515,6 +530,8 @@ _krb5_pfs_ap_req(krb5_context context,
     free(data.data);
 
     return ret;
+#endif
+	return HEIM_PFS_GROUP_INVALID;
 }
 
 /*
@@ -575,6 +592,7 @@ krb5_error_code
 _krb5_pfs_rd_req(krb5_context context,
 		 krb5_auth_context auth_context)
 {
+#if 0
     KRB5_PFS_SELECTION *selected = NULL;
     AuthorizationData *ad = NULL;
     KRB5_PFS_PROPOSE pp;
@@ -650,6 +668,8 @@ _krb5_pfs_rd_req(krb5_context context,
     free_KRB5_PFS_PROPOSE(&pp);
     _krb5_auth_con_free_pfs(context, auth_context);
     return ret;
+#endif
+	return 0;
 }
 
 /*
@@ -661,6 +681,7 @@ _krb5_pfs_mk_rep(krb5_context context,
 		 krb5_auth_context auth_context,
 		 AP_REP *rep)
 {
+#if 0
     struct _krb5_pfs_data *pfs = auth_context->pfs;
     krb5_error_code ret;
     krb5_crypto crypto = NULL;
@@ -750,6 +771,8 @@ _krb5_pfs_mk_rep(krb5_context context,
     }
 
     return ret;
+#endif
+	return 0;
 }
 
 /*
@@ -836,7 +859,7 @@ _krb5_pfs_rd_rep(krb5_context context, krb5_auth_context auth_context, AP_REP *a
 	    goto out;
     }
 
-    heim_assert(auth_context->pfs->group != KRB5_PFS_INVALID, "no pfs group selected");
+    //heim_assert(auth_context->pfs->group != KRB5_PFS_INVALID, "no pfs group selected");
     auth_context->flags |= KRB5_AUTH_CONTEXT_USED_PFS;
  out:
     if (ret) {

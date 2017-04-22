@@ -942,7 +942,7 @@ prepare_app_vpn(krb5_context context,
 		krb5_krbhst_info *hi,
 		int fd)
 {
-#if !TARGET_OS_SIMULATOR
+#if 0
     const char *hostname = hi->hostname;
     nw_path_evaluator_t evaluator = NULL;
     nw_parameters_t parameters = NULL;

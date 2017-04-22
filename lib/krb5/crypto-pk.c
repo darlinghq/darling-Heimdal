@@ -35,6 +35,8 @@
 
 #include <pkinit_asn1.h>
 
+#include <CommonCrypto/CommonDigestSPI.h>
+
 krb5_error_code
 _krb5_pk_octetstring2key(krb5_context context,
 			 krb5_enctype type,
