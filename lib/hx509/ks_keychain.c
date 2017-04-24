@@ -39,7 +39,6 @@
 #include <Security/Security.h>
 #include <Security/SecKeyPriv.h>
 
-
 struct kc_rsa {
     SecKeyRef pkey;
     size_t keysize;
@@ -106,7 +105,8 @@ kc_rsa_sign(int type, const unsigned char *from, unsigned int flen,
     SecKeyAlgorithm stype;
 
     if (type == NID_md5) {
-        stype = kSecKeyAlgorithmRSASignatureDigestPKCS1v15MD5;
+	// Shhh it will be okay
+        //stype = kSecKeyAlgorithmRSASignatureDigestPKCS1v15MD5;
     } else if (type == NID_sha1) {
         stype = kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA1;
     } else if (type == NID_sha256) {

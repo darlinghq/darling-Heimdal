@@ -2,6 +2,7 @@ project(Heimdal)
 
 add_compile_options(
 	-nostdinc
+	-includeconfig.h
 )
 
 add_definitions(
@@ -11,7 +12,6 @@ add_definitions(
 
 include_directories(BEFORE
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/packages/mac/SnowLeopard10A
 	${CMAKE_CURRENT_SOURCE_DIR}/base
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/roken
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/asn1
@@ -23,9 +23,17 @@ include_directories(BEFORE
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/gssapi/cf
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/hx509
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/ipc
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/hcrypto
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/wind
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/hx509/ref
 	${CMAKE_CURRENT_SOURCE_DIR}/gen/include
+	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc
+	${CMAKE_SOURCE_DIR}/src/launchd/liblaunch
+	${CMAKE_CURRENT_SOURCE_DIR}/packages/mac/SnowLeopard10A
 )
+
+mig(lib/ipc/heim_ipc.defs)
+mig(lib/ipc/heim_ipc_async.defs)
 
 set(DYLIB_COMPAT_VERSION "1.0.0")
 set(DYLIB_CURRENT_VERSION "1.0.0")
@@ -265,6 +273,82 @@ add_library(heim_error-tables OBJECT
 )
 make_fat(heim_error-tables)
 
+add_library(heim_hx509 OBJECT
+	lib/hx509/ca.c
+	lib/hx509/cert.c
+	lib/hx509/cms.c
+	lib/hx509/collector.c
+	lib/hx509/crypto.c
+	lib/hx509/doxygen.c
+	lib/hx509/env.c
+	lib/hx509/error.c
+	lib/hx509/file.c
+	lib/hx509/keyset.c
+	lib/hx509/ks_dir.c
+	lib/hx509/ks_file.c
+	lib/hx509/ks_keychain.c
+	lib/hx509/ks_mem.c
+	lib/hx509/ks_null.c
+	lib/hx509/ks_p11.c
+	lib/hx509/ks_p12.c
+	lib/hx509/lock.c
+	lib/hx509/name.c
+	lib/hx509/peer.c
+	lib/hx509/print.c
+	lib/hx509/req.c
+	lib/hx509/revoke.c
+)
+make_fat(heim_hx509)
+
+add_library(heim_ipc-client OBJECT
+	lib/ipc/client.c
+	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc/heim_ipcUser.c
+	lib/ipc/common.c
+	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc/heim_ipc_asyncServer.c
+)
+make_fat(heim_ipc-client)
+
+add_library(heim_hcrypto OBJECT
+	lib/hcrypto/bn.c
+	lib/hcrypto/dh.c
+	lib/hcrypto/evp.c
+	lib/hcrypto/rsa.c
+	lib/hcrypto/ui.c
+	lib/hcrypto/engine.c
+	lib/hcrypto/rsa-sf.c
+	lib/hcrypto/pkcs5.c
+	lib/hcrypto/pkcs12.c
+	lib/hcrypto/evp-cc.c
+	lib/hcrypto/dh-cdsa.c
+	lib/hcrypto/rsa-cdsa.c
+	lib/hcrypto/common.c
+	lib/hcrypto/dh-sf.c
+	lib/hcrypto/validate.c
+)
+make_fat(heim_hcrypto)
+
+add_library(heim_heimbase OBJECT
+	base/abort.c
+	base/log.c
+	base/cf.c
+	base/json.c
+
+	# These files aren't included in the build in Xcode
+	# but they contain functions needed by code in the project,
+	# so we will build them anyway
+	base/bool.c
+	base/null.c
+)
+make_fat(heim_heimbase)
+
+add_library(heim_asn1-hx509 OBJECT
+	gen/asn1_cms_asn1.c
+	gen/asn1_ocsp_asn1.c
+	gen/asn1_pkcs10_asn1.c
+	gen/asn1_rfc2459_asn1.c
+)
+make_fat(heim_asn1-hx509)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
@@ -281,6 +365,11 @@ add_framework(Heimdal
 		$<TARGET_OBJECTS:heim_roken>
 		$<TARGET_OBJECTS:heim_vers>
 		$<TARGET_OBJECTS:heim_error-tables>
+		$<TARGET_OBJECTS:heim_hx509>
+		$<TARGET_OBJECTS:heim_ipc-client>
+		$<TARGET_OBJECTS:heim_hcrypto>
+		$<TARGET_OBJECTS:heim_heimbase>
+		$<TARGET_OBJECTS:heim_asn1-hx509>
 
 	base/test_base.c
 	gen/sym_hcrypto.c
