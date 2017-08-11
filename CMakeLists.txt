@@ -28,7 +28,6 @@ include_directories(BEFORE
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/hx509/ref
 	${CMAKE_CURRENT_SOURCE_DIR}/gen/include
 	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc
-	${CMAKE_SOURCE_DIR}/src/launchd/liblaunch
 	${CMAKE_CURRENT_SOURCE_DIR}/packages/mac/SnowLeopard10A
 )
 
@@ -58,13 +57,12 @@ add_darling_library(heimdal-asn1 SHARED
 make_fat(heimdal-asn1)
 target_link_libraries(heimdal-asn1 system)
 
-add_library(heim_heimcred OBJECT
+add_darling_static_library(heim_heimcred FAT SOURCES
 	lib/heimcred/common.c
 	lib/heimcred/client.c
 )
-make_fat(heim_heimcred)
 
-add_library(heim_krb5 OBJECT
+add_darling_static_library(heim_krb5 FAT SOURCES
 	lib/krb5/add_et_list.c
 	lib/krb5/addr_families.c
 	lib/krb5/aname_to_localname.c
@@ -188,15 +186,13 @@ add_library(heim_krb5 OBJECT
 	lib/krb5/pcache.c
 	lib/krb5/fast.c
 )
-make_fat(heim_krb5)
 
-add_library(heim_wind OBJECT
+add_darling_static_library(heim_wind FAT SOURCES
 	lib/wind/utf8.c
 	lib/wind/icu.c
 )
-make_fat(heim_wind)
 
-add_library(heim_asn1-defs OBJECT
+add_darling_static_library(heim_asn1-defs FAT SOURCES
 	gen/asn1_gssapi_asn1.c
 	gen/asn1_krb5_asn1.c
 	gen/asn1_pkcs8_asn1.c
@@ -206,15 +202,13 @@ add_library(heim_asn1-defs OBJECT
 	gen/asn1_spnego_asn1.c
 	gen/asn1_pku2u_asn1.c
 )
-make_fat(heim_asn1-defs)
 
-add_library(heim_com_err OBJECT
+add_darling_static_library(heim_com_err FAT SOURCES
 	lib/com_err/com_err.c
 	lib/com_err/error.c
 )
-make_fat(heim_com_err)
 
-add_library(heim_roken OBJECT
+add_darling_static_library(heim_roken FAT SOURCES
 	lib/roken/base64.c
 	lib/roken/cloexec.c
 	lib/roken/concat.c
@@ -251,14 +245,12 @@ add_library(heim_roken OBJECT
 	lib/roken/rand.c
 	lib/roken/rkcf.c
 )
-make_fat(heim_roken)
 
-add_library(heim_vers OBJECT
+add_darling_static_library(heim_vers FAT SOURCES
 	lib/vers/print_version.c
 )
-make_fat(heim_vers)
 
-add_library(heim_error-tables OBJECT
+add_darling_static_library(heim_error-tables FAT SOURCES
 	gen/asn1_err.c
 	gen/gkrb5_err.c
 	gen/hc_err.c
@@ -271,9 +263,8 @@ add_library(heim_error-tables OBJECT
 	gen/wind_err.c
 	gen/krb_err.c
 )
-make_fat(heim_error-tables)
 
-add_library(heim_hx509 OBJECT
+add_darling_static_library(heim_hx509 FAT SOURCES
 	lib/hx509/ca.c
 	lib/hx509/cert.c
 	lib/hx509/cms.c
@@ -298,17 +289,15 @@ add_library(heim_hx509 OBJECT
 	lib/hx509/req.c
 	lib/hx509/revoke.c
 )
-make_fat(heim_hx509)
 
-add_library(heim_ipc-client OBJECT
+add_darling_static_library(heim_ipc-client FAT SOURCES
 	lib/ipc/client.c
 	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc/heim_ipcUser.c
 	lib/ipc/common.c
 	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc/heim_ipc_asyncServer.c
 )
-make_fat(heim_ipc-client)
 
-add_library(heim_hcrypto OBJECT
+add_darling_static_library(heim_hcrypto FAT SOURCES
 	lib/hcrypto/bn.c
 	lib/hcrypto/dh.c
 	lib/hcrypto/evp.c
@@ -325,9 +314,8 @@ add_library(heim_hcrypto OBJECT
 	lib/hcrypto/dh-sf.c
 	lib/hcrypto/validate.c
 )
-make_fat(heim_hcrypto)
 
-add_library(heim_heimbase OBJECT
+add_darling_static_library(heim_heimbase FAT SOURCES
 	base/abort.c
 	base/log.c
 	base/cf.c
@@ -339,15 +327,13 @@ add_library(heim_heimbase OBJECT
 	base/bool.c
 	base/null.c
 )
-make_fat(heim_heimbase)
 
-add_library(heim_asn1-hx509 OBJECT
+add_darling_static_library(heim_asn1-hx509 FAT SOURCES
 	gen/asn1_cms_asn1.c
 	gen/asn1_ocsp_asn1.c
 	gen/asn1_pkcs10_asn1.c
 	gen/asn1_rfc2459_asn1.c
 )
-make_fat(heim_asn1-hx509)
 
 # Same version as above
 add_framework(Heimdal
@@ -357,39 +343,42 @@ add_framework(Heimdal
 	VERSION "A"
 
 	SOURCES
-		$<TARGET_OBJECTS:heim_heimcred>
-		$<TARGET_OBJECTS:heim_krb5>
-		$<TARGET_OBJECTS:heim_wind>
-		$<TARGET_OBJECTS:heim_asn1-defs>
-		$<TARGET_OBJECTS:heim_com_err>
-		$<TARGET_OBJECTS:heim_roken>
-		$<TARGET_OBJECTS:heim_vers>
-		$<TARGET_OBJECTS:heim_error-tables>
-		$<TARGET_OBJECTS:heim_hx509>
-		$<TARGET_OBJECTS:heim_ipc-client>
-		$<TARGET_OBJECTS:heim_hcrypto>
-		$<TARGET_OBJECTS:heim_heimbase>
-		$<TARGET_OBJECTS:heim_asn1-hx509>
-
-	base/test_base.c
-	gen/sym_hcrypto.c
-	gen/sym_hx509.c
-	gen/sym_krb5.c
-	gen/sym_pkinit.c
-	gen/sym_roken.c
-	gen/sym_asn1.c
-	gen/sym_base.c
+		base/test_base.c
+		gen/sym_hcrypto.c
+		gen/sym_hx509.c
+		gen/sym_krb5.c
+		gen/sym_pkinit.c
+		gen/sym_roken.c
+		gen/sym_asn1.c
+		gen/sym_base.c
 
 	DEPENDENCIES
 		system
 		sqlite3
 		resolv-darwin
-		#Security
-		CoreFoundation
+		Security
+		${CoreFoundation}
 		#CFNetwork
 		icucore
 		heimdal-asn1
+
+		# Static libs
+		heim_heimcred
+		heim_krb5
+		heim_wind
+		heim_asn1-defs
+		heim_com_err
+		heim_roken
+		heim_vers
+		heim_error-tables
+		heim_hx509
+		heim_ipc-client
+		heim_hcrypto
+		heim_heimbase
+		heim_asn1-hx509
 )
 make_fat(Heimdal)
+
+set_property(TARGET Heimdal APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-dead_strip -Wl,-undefined,dynamic_lookup")
 
 install(TARGETS heimdal-asn1 DESTINATION libexec/darling/usr/lib)
