@@ -244,6 +244,7 @@ add_darling_static_library(heim_roken FAT SOURCES
 	lib/roken/ct.c
 	lib/roken/rand.c
 	lib/roken/rkcf.c
+	lib/roken/timeval.c
 )
 
 add_darling_static_library(heim_vers FAT SOURCES
@@ -313,6 +314,8 @@ add_darling_static_library(heim_hcrypto FAT SOURCES
 	lib/hcrypto/common.c
 	lib/hcrypto/dh-sf.c
 	lib/hcrypto/validate.c
+	lib/hcrypto/rand.c
+	lib/hcrypto/rand-cc.c
 )
 
 add_darling_static_library(heim_heimbase FAT SOURCES
@@ -357,7 +360,7 @@ add_framework(Heimdal
 		sqlite3
 		resolv-darwin
 		Security
-		${CoreFoundation}
+		Foundation
 		#CFNetwork
 		icucore
 		heimdal-asn1
