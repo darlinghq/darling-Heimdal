@@ -361,7 +361,7 @@ add_framework(Heimdal
 		resolv-darwin
 		Security
 		Foundation
-		#CFNetwork
+		CFNetwork
 		icucore
 		heimdal-asn1
 
@@ -382,6 +382,6 @@ add_framework(Heimdal
 )
 make_fat(Heimdal)
 
-set_property(TARGET Heimdal APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-dead_strip -Wl,-undefined,dynamic_lookup")
+set_property(TARGET Heimdal APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-dead_strip")
 
 install(TARGETS heimdal-asn1 DESTINATION libexec/darling/usr/lib)
