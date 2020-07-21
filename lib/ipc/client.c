@@ -89,7 +89,7 @@ mach_init(const char *service, void **ctx)
 
     ipc = malloc(sizeof(*ipc));
     if (ipc == NULL) {
-	mach_port_destroy(mach_task_self(), sport);
+	mach_port_mod_refs(mach_task_self(), sport, MACH_PORT_RIGHT_SEND, -1);
 	return ENOMEM;
     }
 
@@ -143,7 +143,7 @@ mach_ipc(void *ctx,
 			     &errorcode,
 			     replyin, &replyin_length,
 			     &replyout, &replyout_length);
-	if (ret == MACH_SEND_INVALID_DEST) {
+	if (ret == MACH_SEND_INVALID_DEST || ret == MIG_SERVER_DIED) {
 	    mach_port_t nport;
 	    /* race other threads to get a new port */
 	    ret = look_up(ipc->name, &nport);

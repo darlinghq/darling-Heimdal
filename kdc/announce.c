@@ -72,10 +72,6 @@ static void destroy_dns_sd(void);
 static void update_all(SCDynamicStoreRef, CFArrayRef, void *);
 
 
-/* parameters */
-static CFStringRef NetworkChangedKey_BackToMyMac = CFSTR("Setup:/Network/BackToMyMac");
-
-
 static char *
 CFString2utf8(CFStringRef string)
 {
@@ -110,7 +106,7 @@ retry_timer(void)
 
     g_restart_timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, g_queue);
     t = dispatch_time(DISPATCH_TIME_NOW, 5ull * NSEC_PER_SEC);
-    dispatch_source_set_timer(g_restart_timer, t, 0, NSEC_PER_SEC);
+    dispatch_source_set_timer(g_restart_timer, t, DISPATCH_TIME_FOREVER, NSEC_PER_SEC);
     dispatch_source_set_event_handler(g_restart_timer, ^{
 	    create_dns_sd();
 	    dispatch_release(g_restart_timer);
@@ -176,25 +172,6 @@ domain_add(const char *domain, const char *realm, int flag)
     e->next = g_entries;
     g_entries = e;
 }
-
-struct addctx {
-    int flags;
-    const char *realm;
-};
-
-static void
-domains_add(const void *key, const void *value, void *context)
-{
-    char *str = CFString2utf8((CFStringRef)value);
-    struct addctx *ctx = context;
-
-    if (str == NULL)
-	return;
-    if (str[0] != '\0')
-	domain_add(str, ctx->realm, F_EXISTS | ctx->flags);
-    free(str);
-}
-
 
 static void
 dnsCallback(DNSServiceRef sdRef __attribute__((unused)),
@@ -398,22 +375,8 @@ update_dns(void)
 static void
 update_entries(SCDynamicStoreRef store, const char *realm, int flags)
 {
-    CFDictionaryRef btmm;
-
     /* we always announce in the local domain */
     domain_add("local", realm, F_EXISTS | flags);
-
-    /* announce btmm */
-    btmm = SCDynamicStoreCopyValue(store, NetworkChangedKey_BackToMyMac);
-    if (btmm) {
-	struct addctx addctx;
-
-	addctx.flags = flags;
-	addctx.realm = realm;
-
-	CFDictionaryApplyFunction(btmm, domains_add, &addctx);
-	CFRelease(btmm);
-    }
 }
 
 static void
@@ -507,7 +470,6 @@ register_notification(void)
 	errx(1, "CFArrayCreateMutable");
 
     CFArrayAppendValue(keys, computerNameKey);
-    CFArrayAppendValue(keys, NetworkChangedKey_BackToMyMac);
 
     if (SCDynamicStoreSetNotificationKeys(store, keys, NULL) == false)
 	errx(1, "SCDynamicStoreSetNotificationKeys");

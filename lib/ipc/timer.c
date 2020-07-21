@@ -94,14 +94,15 @@ reschedule_timer(void)
 	 * needed again
 	 */
 	dispatch_source_set_timer(timer_source,
-				  DISPATCH_TIME_FOREVER, 0, 10ull * NSEC_PER_SEC);
+				  DISPATCH_TIME_FOREVER, DISPATCH_TIME_FOREVER, 0);
     } else {
 	struct timespec ts;
 	ts.tv_sec = e->t;
 	ts.tv_nsec = 0;
 	dispatch_source_set_timer(timer_source,
 				  dispatch_walltime(&ts, 0),
-				  0, 10ull * NSEC_PER_SEC);
+				  DISPATCH_TIME_FOREVER,
+				  10ull * NSEC_PER_SEC);
     }
 }
 
