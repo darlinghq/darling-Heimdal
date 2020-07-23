@@ -44,7 +44,9 @@
 #include <krb5.h>
 #include <roken.h>
 #include <kcm.h>
-
+#ifdef DARLING
+#include <CoreFoundation/CFRuntime.h>
+#endif
 
 
 #include <notify.h>

@@ -1,0 +1,12 @@
+lib/ntlm/ntlm.c
+gen/ntlm_err.c
+lib/krb5/store.c
+lib/krb5/store_emem.c
+lib/krb5/store_mem.c
+lib/krb5/data.c
+lib/krb5/error_string.c
+lib/ntlm/apop.c
+lib/ntlm/digest.c
+lib/ntlm/scram.c
+lib/krb5/store-int.c
+
