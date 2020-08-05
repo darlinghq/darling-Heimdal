@@ -35,7 +35,11 @@
 
 #include "gsskrb5_locl.h"
 
+#ifdef DARLING
+#include "heimcred.h"
+#else
 #include "HeimCred.h"
+#endif
 
 #ifdef __APPLE__
 

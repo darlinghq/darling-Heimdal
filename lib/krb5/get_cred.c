@@ -34,7 +34,12 @@
  */
 
 #include "krb5_locl.h"
+#ifdef DARLING
+// Apple's filesystems aren't case-sensitive by default, but most of Linux's are :|
+#include "heimcred.h"
+#else
 #include "HeimCred.h"
+#endif
 #include <assert.h>
 
 static krb5_error_code
