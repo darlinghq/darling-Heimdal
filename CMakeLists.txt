@@ -1,5 +1,12 @@
 project(Heimdal)
 
+remove_sdk_framework(CommonAuth
+	PRIVATE
+)
+remove_sdk_framework(Heimdal
+	PRIVATE
+)
+
 add_compile_options(
 	-nostdinc
 	-includeconfig.h
@@ -371,12 +378,20 @@ add_darling_static_library(heim_asn1-digest FAT SOURCES
 	gen/asn1_digest_asn1.c
 )
 
+set(FRAMEWORK_HEIMDAL_VERSION "A")
+
+generate_sdk_framework(Heimdal
+    VERSION ${FRAMEWORK_HEIMDAL_VERSION}
+    HEADER "include-framework/Heimdal"
+	PRIVATE
+)
+
 # Same version as above
 add_framework(Heimdal
 	FAT
 	CURRENT_VERSION
 	PRIVATE
-	VERSION "A"
+	VERSION ${FRAMEWORK_HEIMDAL_VERSION}
 
 	SOURCES
 		base/test_base.c
@@ -425,11 +440,19 @@ target_link_options(Heimdal PRIVATE
 
 install(TARGETS heimdal-asn1 DESTINATION libexec/darling/usr/lib)
 
+set(FRAMEWORK_COMMONAUTH_VERSION "A")
+
+generate_sdk_framework(CommonAuth
+    VERSION ${FRAMEWORK_COMMONAUTH_VERSION}
+    HEADER "include-framework/CommonAuth"
+	PRIVATE
+)
+
 add_framework(CommonAuth
 	FAT
 	CURRENT_VERSION
 	PRIVATE
-	VERSION "A"
+	VERSION ${FRAMEWORK_COMMONAUTH_VERSION}
 
 	SOURCES
 		gen/ntlm_err.c

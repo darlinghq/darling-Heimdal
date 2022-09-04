@@ -1,5 +1,7 @@
 project(darling-Heimdal-gssapi)
 
+remove_sdk_framework(GSS)
+
 add_compile_definitions(
 	PRIVATE
 )
@@ -257,10 +259,17 @@ add_darling_static_library(gss-digest FAT SOURCES
 	digest/release_name.c
 )
 
+set(FRAMEWORK_VERSION "A")
+
+generate_sdk_framework(GSS
+    VERSION ${FRAMEWORK_VERSION}
+    HEADER "../../include-framework/GSS"
+)
+
 add_framework(GSS
 	FAT
 	CURRENT_VERSION
-	VERSION "A"
+	VERSION ${FRAMEWORK_VERSION}
 
 	SOURCES
 		../../gen/sym_gss.c
