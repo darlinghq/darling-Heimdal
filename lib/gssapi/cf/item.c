@@ -46,6 +46,7 @@
 #include <kcm.h>
 #ifdef DARLING
 #include <CoreFoundation/CFRuntime.h>
+#include <CoreFoundation/CFPriv.h>
 #endif
 
 

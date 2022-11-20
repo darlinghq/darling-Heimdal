@@ -10,6 +10,7 @@ remove_sdk_framework(Heimdal
 add_compile_options(
 	-nostdinc
 	-includeconfig.h
+	-Wno-error=int-conversion
 )
 
 add_compile_definitions(
