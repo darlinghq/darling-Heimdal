@@ -55,6 +55,7 @@ HEIMCRED_CONST(CFTypeRef, kHEIMTargetName);
  */
 
 HeimCredContext HeimCredCTX;
+typedef struct HeimCredEventContext_s *HeimCredEventContextRef;
 
 /*
  *
@@ -80,8 +81,7 @@ HeimCredMessageCopyAttributes(xpc_object_t object, const char *key, CFTypeID typ
 	return NULL;
     item = _CFXPCCreateCFObjectFromXPCObject(xpcattrs);
     if (item && CFGetTypeID(item) != type) {
-	CFRelease(item);
-	item = NULL;
+	CFRELEASE_NULL(item);
     }
     return item;	
 }
@@ -121,12 +121,14 @@ HeimCredCopyDebugName(CFTypeRef cf)
 	CFTypeRef server = CFDictionaryGetValue(cred->attributes, kHEIMAttrServerName);
 	CFTypeRef parent = CFDictionaryGetValue(cred->attributes, kHEIMAttrParentCredential);
 	CFTypeRef group = CFDictionaryGetValue(cred->attributes, kHEIMAttrLeadCredential);
+	CFTypeRef altDSID = CFDictionaryGetValue(cred->attributes, kHEIMAttrAltDSID);
 	CFTypeRef uid = CFDictionaryGetValue(cred->attributes, kHEIMAttrUserID);
+	CFTypeRef asid = CFDictionaryGetValue(cred->attributes, kHEIMAttrASID);
 	
 	int lead = group ? CFBooleanGetValue(group) : false;
 	CFTypeRef acl = CFDictionaryGetValue(cred->attributes, kHEIMAttrBundleIdentifierACL);
-	return CFStringCreateWithFormat(NULL, NULL, CFSTR("HeimCred<%@ group: %@ parent: %@ client: %@ server: %@ lead: %s ACL: %@, UID: %@>"),
-					cred->uuid, group, parent, client, server, lead ? "yes" : "no", acl ? acl : CFSTR(""), uid);
+	return CFStringCreateWithFormat(NULL, NULL, CFSTR("HeimCred<%@ group: %@ parent: %@ client: %@ server: %@ lead: %s ACL: %@, altDSID: %@, Uid: %@, asid: %@>"),
+					cred->uuid, group, parent, client, server, lead ? "yes" : "no", acl ? acl : CFSTR(""), altDSID ? : CFSTR(""), uid ? : CFSTR(""), asid ? : CFSTR(""));
     } else {
 	return CFStringCreateWithFormat(NULL, NULL, CFSTR("HeimCred<%@>"), cred->uuid);
     }
@@ -138,7 +140,66 @@ HeimCredReleaseItem(CFTypeRef item)
     HeimCredRef cred = (HeimCredRef)item;
     CFRELEASE_NULL(cred->uuid);
     CFRELEASE_NULL(cred->attributes);
+#if HEIMCRED_SERVER
+    HEIMDAL_MUTEX_lock(&cred->event_mutex);
+    if (cred->expireEventContext) {
+	HEIMDAL_MUTEX_lock(&cred->expireEventContext->cred_mutex);
+	cred->expireEventContext->cred = NULL;
+	HEIMDAL_MUTEX_unlock(&cred->expireEventContext->cred_mutex);
+	CFRELEASE_NULL(cred->expireEventContext);
+    }
+    if (cred->renewEventContext) {
+	HEIMDAL_MUTEX_lock(&cred->renewEventContext->cred_mutex);
+	cred->renewEventContext->cred = NULL;
+	HEIMDAL_MUTEX_unlock(&cred->renewEventContext->cred_mutex);
+	CFRELEASE_NULL(cred->renewEventContext);
+    }
+    if (cred->renew_event) {
+	heim_ipc_event_cancel(cred->renew_event);
+	heim_ipc_event_free(cred->renew_event);
+	cred->renew_event = NULL;
+    }
+    if (cred->expire_event) {
+	heim_ipc_event_cancel(cred->expire_event);
+	heim_ipc_event_free(cred->expire_event);
+	cred->expire_event = NULL;
+    }
+    HEIMDAL_MUTEX_unlock(&cred->event_mutex);
+    HEIMDAL_MUTEX_destroy(&cred->event_mutex);
+#endif
 }
+
+#if HEIMCRED_SERVER
+static void
+HeimCredEventContextReleaseItem(CFTypeRef item)
+{
+    HeimCredEventContextRef ctx = (HeimCredEventContextRef)item;
+    HEIMDAL_MUTEX_destroy(&ctx->cred_mutex);
+}
+
+
+CFTypeID
+HeimCredEventContextGetTypeID(void)
+{
+    _HeimCredInitCommon();
+    return HeimCredCTX.heid;
+}
+
+HeimCredEventContextRef
+HeimCredEventContextCreateItem(HeimCredRef cred)
+{
+    HeimCredEventContextRef ctx = (HeimCredEventContextRef)_CFRuntimeCreateInstance(NULL, HeimCredCTX.heid, sizeof(struct HeimCredEventContext_s) - sizeof(CFRuntimeBase), NULL);
+    if (ctx == NULL)
+	return NULL;
+
+    // cred is a "weak" reference to break the retain cycle.  cred->event->event_context->cred
+    // the cred will set this value to NULL when it is released and the event handlers retain the cred during execution.
+    ctx->cred = cred;
+    HEIMDAL_MUTEX_init(&ctx->cred_mutex);
+    return ctx;
+}
+#endif
+
 
 void
 _HeimCredInitCommon(void)
@@ -158,6 +219,20 @@ _HeimCredInitCommon(void)
 		HeimCredCopyDebugName
 	    };
 	    HeimCredCTX.haid = _CFRuntimeRegisterClass(&HeimCredClass);
+#if HEIMCRED_SERVER
+	    static const CFRuntimeClass HeimCredEventContextClass = {
+		0,
+		"HeimCredEventContext",
+		NULL,
+		NULL,
+		HeimCredEventContextReleaseItem,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	    };
+	    HeimCredCTX.heid = _CFRuntimeRegisterClass(&HeimCredEventContextClass);
+#endif
 
 	    HeimCredCTX.queue = dispatch_queue_create("HeimCred", NULL);
 
@@ -186,6 +261,13 @@ HeimCredCreateItem(CFUUIDRef uuid)
     
     CFRetain(uuid);
     cred->uuid = uuid;
+#if HEIMCRED_SERVER
+    cred->acquire_status = CRED_STATUS_ACQUIRE_INITIAL;
+    cred->expire_event = NULL;
+    cred->renew_event = NULL;
+    HEIMDAL_MUTEX_init(&cred->event_mutex);
+    cred->is_acquire_cred = false;
+#endif
     return cred;
 }
 

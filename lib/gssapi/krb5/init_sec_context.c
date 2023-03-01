@@ -35,11 +35,7 @@
 
 #include "gsskrb5_locl.h"
 
-#ifdef DARLING
-#include "heimcred.h"
-#else
 #include "HeimCred.h"
-#endif
 
 #ifdef __APPLE__
 
@@ -476,9 +472,11 @@ initiator_ready(OM_uint32 * minor_status,
     int32_t seq_number;
     int is_cfx = 0;
 
-    krb5_free_creds(context, ctx->kcred);
-    ctx->kcred = NULL;
-
+    if (ctx->kcred) {
+	krb5_free_creds(context, ctx->kcred);
+	ctx->kcred = NULL;
+    }
+    
     if (ctx->more_flags & CLOSE_CCACHE)
 	krb5_cc_close(context, ctx->ccache);
     ctx->ccache = NULL;

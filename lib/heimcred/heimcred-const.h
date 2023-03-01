@@ -35,6 +35,7 @@ HEIMCRED_CONST(CFStringRef, kHEIMTypeIAKerb);
 HEIMCRED_CONST(CFStringRef, kHEIMTypeNTLM);
 HEIMCRED_CONST(CFStringRef, kHEIMTypeConfiguration);
 HEIMCRED_CONST(CFStringRef, kHEIMTypeSchema);
+HEIMCRED_CONST(CFStringRef, kHEIMTypeKerberosAcquireCred);
 
 /* schema types */
 HEIMCRED_CONST(CFStringRef, kHEIMObjectType);
@@ -42,7 +43,8 @@ HEIMCRED_CONST(CFStringRef, kHEIMObjectKerberos);
 HEIMCRED_CONST(CFStringRef, kHEIMObjectNTLM);
 HEIMCRED_CONST(CFStringRef, kHEIMObjectGeneric);
 HEIMCRED_CONST(CFStringRef, kHEIMObjectConfiguration);
-
+HEIMCRED_CONST(CFStringRef, kHEIMObjectKerberosAcquireCred);
+HEIMCRED_CONST(CFStringRef, kHEIMObjectAny);
 
 HEIMCRED_CONST(CFTypeRef, kHEIMAttrClientName);
 HEIMCRED_CONST(CFStringRef, kHEIMNameUserName);
@@ -84,10 +86,14 @@ HEIMCRED_CONST(CFTypeRef, kHEIMAttrRetainStatus); /* CFNumberRef */
 HEIMCRED_CONST(CFTypeRef, kHEIMAttrBundleIdentifierACL); /* CFArray[bundle-id] */
 
 HEIMCRED_CONST(CFTypeRef, kHEIMAttrDefaultCredential); /* BooleanRef */
+HEIMCRED_CONST(CFTypeRef, kHEIMAttrTemporaryCache); /* BooleanRef */
 
 HEIMCRED_CONST(CFTypeRef, kHEIMAttrKerberosTicketGrantingTicket); /* BooleanRef */
 
-HEIMCRED_CONST(CFTypeRef, kHEIMAttrUserID); /* UserId for Shared iPad */
+HEIMCRED_CONST(CFTypeRef, kHEIMAttrAltDSID); /* Unique User Id for Shared iPad */
+
+HEIMCRED_CONST(CFTypeRef, kHEIMAttrUserID); /*  User Id for use-uid-matching */
+HEIMCRED_CONST(CFTypeRef, kHEIMAttrASID); /*  asid for use-uid-matching */
 
 /* NTLM */
 HEIMCRED_CONST(CFStringRef, kHEIMAttrNTLMUsername);

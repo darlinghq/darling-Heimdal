@@ -340,7 +340,7 @@ init_context_from_config_file(krb5_context context)
 	    krb5_addlog_dest(context, context->debug_dest, logline);
 	    free(logline);
 	} else {
-	    krb5_addlog_dest(context, context->debug_dest, "0-1/OSLOG:debug:libkrb5");
+	    krb5_addlog_dest(context, context->debug_dest, "0-10/OSLOG:normal:libkrb5");
 	}
     }
 
@@ -381,6 +381,7 @@ cc_ops_register(krb5_context context)
     krb5_cc_register(context, &krb5_xcc_api_ops, TRUE);
 #endif
     krb5_cc_register(context, &krb5_xcc_ops, TRUE);
+    krb5_cc_register(context, &krb5_xcc_temp_api_ops, TRUE);
 #endif
     _krb5_load_ccache_plugins(context);
     return 0;

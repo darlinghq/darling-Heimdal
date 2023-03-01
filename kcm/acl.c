@@ -43,7 +43,8 @@ kcm_access(krb5_context context,
     krb5_error_code ret;
 
     KCM_ASSERT_VALID(ccache);
-
+    
+    HEIMDAL_MUTEX_lock(&ccache->mutex);
     if (ccache->flags & KCM_FLAGS_OWNER_IS_SYSTEM) {
 	/* Let root always read system caches */
 	if (CLIENT_IS_ROOT(client)) {
@@ -51,18 +52,77 @@ kcm_access(krb5_context context,
 	} else {
 	    ret = KRB5_FCC_PERM;
 	}
-    } else if (kcm_is_same_session(client, ccache->uid, ccache->session)) {
+    } else if (kcm_is_same_session_locked(client, ccache->uid, ccache->session)) {
 	/* same session same as owner */
 	ret = 0;
     } else {
 	ret = KRB5_FCC_PERM;
     }
+    HEIMDAL_MUTEX_unlock(&ccache->mutex);
 
     if (ret) {
 	kcm_log(2, "Process %d is not permitted to call %s on cache %s",
 		client->pid, kcm_op2string(opcode), ccache->name);
     }
 
+    return ret;
+}
+
+krb5_error_code
+kcm_principal_access_locked(krb5_context context,
+	   kcm_client *client,
+	   krb5_principal server,
+	   kcm_operation opcode,
+	   kcm_ccache ccache)
+{
+    KCM_ASSERT_VALID(ccache);
+    
+    if (!(server->name.name_string.len == 2 &&
+	strcmp(server->name.name_string.val[0], "krb5_ccache_conf_data") == 0 &&
+	strcmp(server->name.name_string.val[1], "password") == 0))
+    {
+	// we arent concerned with it, exit and allow access
+	return 0;
+    }
+    
+    //default to no access
+    krb5_error_code ret = KRB5_FCC_PERM;
+
+    switch (client->iakerb_access) {
+	case IAKERB_NOT_CHECKED:
+	{
+	    const char* callingApp = kcm_client_get_execpath(client);
+	    kcm_log(1, "kcm_principal_access: calling app: %s", callingApp);
+	    
+	    // we check for either the presence of the entitlement or the approved apps.  The file path is the first filter to avoid the expensive code signature check until needed.
+	    if (krb5_has_entitlement(client->audit_token, CFSTR("com.apple.private.gssapi.iakerb-data-access"))) {
+		kcm_log(1, "kcm_principal_access: has entitlement");
+		client->iakerb_access = IAKERB_ACCESS_GRANTED;
+	    } else if (strcmp(callingApp, "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthSysAgent") == 0 &&
+		       krb5_applesigned(context, client->audit_token, "com.apple.NetAuthSysAgent")) {
+		client->iakerb_access = IAKERB_ACCESS_GRANTED;
+	    } else if (strcmp(callingApp, "/usr/sbin/gssd") == 0 &&
+		       krb5_applesigned(context, client->audit_token, "com.apple.gssd")) {
+		client->iakerb_access = IAKERB_ACCESS_GRANTED;
+	    } else {
+		client->iakerb_access = IAKERB_ACCESS_DENIED;
+	    }
+	    
+	    if (client->iakerb_access == IAKERB_ACCESS_GRANTED) {
+		ret = 0;
+	    }
+	    break;
+	}
+	case IAKERB_ACCESS_GRANTED:
+	    ret = 0;
+	    break;
+	    
+	case IAKERB_ACCESS_DENIED:
+	    ret = KRB5_FCC_PERM;
+	    break;
+    }
+
+    kcm_log(1, "kcm_principal_access: access %s", (ret==0 ? "allowed" : "denied"));
     return ret;
 }
 
@@ -74,13 +134,18 @@ kcm_chmod(krb5_context context,
 {
     KCM_ASSERT_VALID(ccache);
 
+    HEIMDAL_MUTEX_lock(&ccache->mutex);
     /* System cache mode can only be set at startup */
-    if (ccache->flags & KCM_FLAGS_OWNER_IS_SYSTEM)
+    if (ccache->flags & KCM_FLAGS_OWNER_IS_SYSTEM) {
+	HEIMDAL_MUTEX_unlock(&ccache->mutex);
 	return KRB5_FCC_PERM;
+    }
 
-    if (ccache->uid != client->uid)
+    if (ccache->uid != client->uid) {
+	HEIMDAL_MUTEX_unlock(&ccache->mutex);
 	return KRB5_FCC_PERM;
-
+    }
+    HEIMDAL_MUTEX_unlock(&ccache->mutex);
     return 0;
 }
 
@@ -92,14 +157,17 @@ kcm_chown(krb5_context context,
 {
     KCM_ASSERT_VALID(ccache);
 
-    /* System cache owner can only be set at startup */
-    if (ccache->flags & KCM_FLAGS_OWNER_IS_SYSTEM)
-	return KRB5_FCC_PERM;
-
-    if (ccache->uid != client->uid && client->uid != 0)
-	return KRB5_FCC_PERM;
-
     HEIMDAL_MUTEX_lock(&ccache->mutex);
+    /* System cache mode can only be set at startup */
+    if (ccache->flags & KCM_FLAGS_OWNER_IS_SYSTEM) {
+	HEIMDAL_MUTEX_unlock(&ccache->mutex);
+	return KRB5_FCC_PERM;
+    }
+
+    if (ccache->uid != client->uid) {
+	HEIMDAL_MUTEX_unlock(&ccache->mutex);
+	return KRB5_FCC_PERM;
+    }
 
     ccache->uid = uid;
 
