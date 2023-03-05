@@ -1,1 +1,1 @@
-../../../gen/Heimdal/hdb_asn1.h
+../../../gen/asn1-generate-template/hdb_asn1.h

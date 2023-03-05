@@ -1,1 +1,1 @@
-../../../lib/gssapi/gssapi/gssapi_scram.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_scram.h

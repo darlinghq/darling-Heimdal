@@ -1,1 +1,1 @@
-../../../gen/GSS/gssapi_spnego.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_spnego.h

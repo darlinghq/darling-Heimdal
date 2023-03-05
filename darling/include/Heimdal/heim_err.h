@@ -1,1 +1,1 @@
-../../../gen/Heimdal/heim_err.h
+../../../gen/error-tables/heim_err.h

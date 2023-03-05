@@ -1,1 +1,1 @@
-../../../gen/Heimdal/hx509_err.h
+../../../gen/error-tables/hx509_err.h

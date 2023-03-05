@@ -1,1 +1,1 @@
-../../../lib/gssapi/gssapi/gssapi_ntlm.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_ntlm.h

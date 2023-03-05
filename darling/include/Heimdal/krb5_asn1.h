@@ -1,1 +1,1 @@
-../../../gen/Heimdal/krb5_asn1.h
+../../../gen/asn1-generate-template/krb5_asn1.h

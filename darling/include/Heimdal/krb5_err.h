@@ -1,1 +1,1 @@
-../../../gen/Heimdal/krb5_err.h
+../../../gen/error-tables/krb5_err.h

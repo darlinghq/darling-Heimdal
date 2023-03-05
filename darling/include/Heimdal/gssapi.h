@@ -1,1 +1,1 @@
-../../../lib/gssapi/gssapi/gssapi.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi.h

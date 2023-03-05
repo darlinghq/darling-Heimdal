@@ -1,1 +1,1 @@
-../../../gen/Heimdal/k524_err.h
+../../../gen/error-tables/k524_err.h

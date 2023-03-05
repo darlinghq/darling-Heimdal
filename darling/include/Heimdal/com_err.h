@@ -1,1 +1,1 @@
-../../../gen/Heimdal/com_err.h
+../../../gen/krb5-rewrite-headers/Heimdal/com_err.h

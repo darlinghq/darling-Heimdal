@@ -1,1 +1,1 @@
-../../../gen/Heimdal/hx509-protos.h
+../../../gen/krb5-rewrite-headers/Heimdal/hx509-protos.h

@@ -1,1 +1,1 @@
-../../../gen/Heimdal/asn1_err.h
+../../../gen/error-tables/asn1_err.h

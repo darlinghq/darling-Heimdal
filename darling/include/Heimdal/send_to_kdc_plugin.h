@@ -1,1 +1,1 @@
-../../../gen/Heimdal/send_to_kdc_plugin.h
+../../../gen/krb5-rewrite-headers/Heimdal/send_to_kdc_plugin.h

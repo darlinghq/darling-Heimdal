@@ -1,1 +1,1 @@
-../../../gen/GSS/gssapi_netlogon.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_netlogon.h
