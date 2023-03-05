@@ -1,0 +1,46 @@
+# 1 "<stdin>"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 368 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "<stdin>" 2
+# 1 "/Users/user/Downloads/darling-Heimdal/packages/mac/SnowLeopard10A/config.h" 1
+# 1563 "/Users/user/Downloads/darling-Heimdal/packages/mac/SnowLeopard10A/config.h"
+# 1 "/Users/user/Downloads/darling-Heimdal/packages/mac/SnowLeopard10A/config-apple.h" 1
+# 1564 "/Users/user/Downloads/darling-Heimdal/packages/mac/SnowLeopard10A/config.h" 2
+# 2 "<stdin>" 2
+_HeimODAddAppleIDAlias
+_HeimODAddCertificate
+_HeimODAddCertificateSubjectAndTrustAnchor
+_HeimODAddServerAlias
+_HeimODAddSubjectAltCertName
+_HeimODAddSubjectAltCertSHA1Digest
+_HeimODClearKerberosFlags
+_HeimODCopyDefaultEnctypes
+_HeimODCopyKerberosFlags
+_HeimODCopyServerAliases
+_HeimODCopySubjectAltNames
+_HeimODCreatePrincipalData
+_HeimODCreateRealm
+_HeimODGetKerberosMaxLife
+_HeimODGetKerberosMaxRenewable
+_HeimODRemoveAppleIDAlias
+_HeimODRemoveCertificateSubjectAndTrustAnchor
+_HeimODRemovePrincipalData
+_HeimODRemoveServerAlias
+_HeimODRemoveSubjectAltElement
+_HeimODSetKerberosFlags
+_HeimODSetKerberosMaxLife
+_HeimODSetKerberosMaxRenewable
+_HeimODSetKeys
+_HeimODDumpHdbEntry
+_HeimODDumpRecord
+_HeimODLoadRecord
+_HeimODCopyACL
+_HeimODSetACL
+_HeimODClearACL
+_HeimODModifyKeys
+_HeimODKeysetToString
+_HeimODCreateSRPKeys
+_HeimODSetVerifiers
