@@ -1,8 +1,8 @@
 #!/bin/sh
 # export SRCROOT="$(cd ../../.. && pwd)"
-# export GENERATED_DIR="$SRCROOT/gen"
+# export GENERATED_DIR="$SRCROOT/gen/tmp"
 
-HEIMDAL_COMPILE_ET_DIR="$GENERATED_DIR/tmp/compile_et"
+HEIMDAL_COMPILE_ET_DIR="$GENERATED_DIR/compile_et-yacc/compile_et"
 mkdir -p "$HEIMDAL_COMPILE_ET_DIR"
 
 HeimdalCompilers/heimdal-compile_et/compile_et-yacc.sh

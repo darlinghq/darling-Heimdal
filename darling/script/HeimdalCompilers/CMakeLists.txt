@@ -5,9 +5,9 @@ cmake_minimum_required(VERSION 3.9)
 project(cmake_heimdal_compiler)
 
 set(SRCROOT "../../..")
-set(HEIMDAL_COMPILE_ET_DIR "${SRCROOT}/gen/tmp/compile_et")
-set(HEIMDAL_SLC_DIR "${SRCROOT}/gen/tmp/slc")
-set(HEIMDAL_ASN1_COMPILE_DIR "${SRCROOT}/gen/tmp/asn1_compile")
+set(HEIMDAL_COMPILE_ET_DIR "${SRCROOT}/gen/tmp/compile_et-yacc/compile_et")
+set(HEIMDAL_SLC_DIR "${SRCROOT}/gen/tmp/slc-yacc/slc")
+set(HEIMDAL_ASN1_COMPILE_DIR "${SRCROOT}/gen/tmp/asn1_compiler-yacc/asn1_compile")
 
 # Build vers library
 add_library(vers STATIC
