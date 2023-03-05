@@ -263,7 +263,7 @@ set(FRAMEWORK_VERSION "A")
 
 generate_sdk_framework(GSS
     VERSION ${FRAMEWORK_VERSION}
-    HEADER "../../include-framework/GSS"
+    HEADER "../../darling/include/GSS"
 )
 
 add_framework(GSS

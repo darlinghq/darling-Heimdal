@@ -1,1 +1,0 @@
-../../packages/mac/SnowLeopard10A/config.h

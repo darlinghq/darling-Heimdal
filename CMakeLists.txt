@@ -383,7 +383,7 @@ set(FRAMEWORK_HEIMDAL_VERSION "A")
 
 generate_sdk_framework(Heimdal
     VERSION ${FRAMEWORK_HEIMDAL_VERSION}
-    HEADER "include-framework/Heimdal"
+    HEADER "darling/include/Heimdal"
 	PRIVATE
 )
 
@@ -445,7 +445,7 @@ set(FRAMEWORK_COMMONAUTH_VERSION "A")
 
 generate_sdk_framework(CommonAuth
     VERSION ${FRAMEWORK_COMMONAUTH_VERSION}
-    HEADER "include-framework/CommonAuth"
+    HEADER "darling/include/CommonAuth"
 	PRIVATE
 )
 
