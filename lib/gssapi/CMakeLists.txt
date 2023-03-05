@@ -17,7 +17,8 @@ include_directories(BEFORE
 	${CMAKE_CURRENT_SOURCE_DIR}/gssapi
 	${CMAKE_CURRENT_SOURCE_DIR}/cf
 	${CMAKE_CURRENT_SOURCE_DIR}/ns
-	${CMAKE_CURRENT_SOURCE_DIR}/../../gen/CommonAuth
+	${CMAKE_CURRENT_SOURCE_DIR}/../ntlm
+	${CMAKE_CURRENT_SOURCE_DIR}/../../gen/build-export-data
 )
 
 add_darling_static_library(gss-krb5 FAT SOURCES
@@ -272,7 +273,7 @@ add_framework(GSS
 	VERSION ${FRAMEWORK_VERSION}
 
 	SOURCES
-		../../gen/sym_gss.c
+		../../gen/build-export-data/sym_gss.c
 		cf/item.c
 		cf/ntlm.c
 		cf/credential.c
@@ -285,6 +286,7 @@ add_framework(GSS
 		resolv-darwin
 		SystemConfiguration
 		CommonAuth
+		bsm.0
 
 		# static libs
 		heim_asn1-defs
@@ -299,5 +301,5 @@ add_framework(GSS
 )
 
 target_link_options(GSS PRIVATE
-	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/../../gen/gss.exp
+	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/../../gen/build-export-data/gss.exp
 )

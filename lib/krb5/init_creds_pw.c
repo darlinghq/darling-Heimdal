@@ -35,7 +35,11 @@
 
 #include "krb5_locl.h"
 #include <pkinit_asn1.h>
+#ifdef DARLING
+#include "heimcred.h"
+#else
 #include "HeimCred.h"
+#endif
 #if !TARGET_OS_SIMULATOR
 #include <NEHelperClient.h>
 #endif

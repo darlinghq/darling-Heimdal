@@ -39,10 +39,11 @@ include_directories(BEFORE
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/hcrypto
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/wind
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/hx509/ref
-	${CMAKE_CURRENT_SOURCE_DIR}/gen
 	${CMAKE_CURRENT_BINARY_DIR}/lib/ipc
 	${CMAKE_CURRENT_SOURCE_DIR}/packages/mac/SnowLeopard10A
-	${CMAKE_CURRENT_SOURCE_DIR}/gen/kadm/kadm5
+	${CMAKE_CURRENT_SOURCE_DIR}/gen/asn1-generate-template/asn1-generate-template
+	${CMAKE_CURRENT_SOURCE_DIR}/gen/error-tables
+	${CMAKE_CURRENT_SOURCE_DIR}/gen/build-export-data
 )
 
 mig(lib/ipc/heim_ipc.defs)
@@ -72,7 +73,7 @@ make_fat(heimdal-asn1)
 target_link_libraries(heimdal-asn1 system)
 
 target_link_options(heimdal-asn1 PRIVATE
-	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/heimdal-asn1.exp
+	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/build-export-data/heimdal-asn1.exp
 )
 
 add_darling_static_library(heim_heimcred FAT SOURCES
@@ -142,7 +143,7 @@ add_darling_static_library(heim_krb5 FAT SOURCES
 	lib/krb5/keytab_keyfile.c
 	lib/krb5/keytab_memory.c
 	lib/krb5/keytab.c
-	lib/krb5/kkdcp.c
+	lib/krb5/kkdcp.m
 	lib/krb5/krbhst-test.c
 	lib/krb5/krbhst.c
 	lib/krb5/kuserok.c
@@ -211,14 +212,14 @@ add_darling_static_library(heim_wind FAT SOURCES
 )
 
 add_darling_static_library(heim_asn1-defs FAT SOURCES
-	gen/asn1_gssapi_asn1.c
-	gen/asn1_krb5_asn1.c
-	gen/asn1_pkcs12_asn1.c
-	gen/asn1_pkcs8_asn1.c
-	gen/asn1_pkcs9_asn1.c
-	gen/asn1_pkinit_asn1.c
-	gen/asn1_pku2u_asn1.c
-	gen/asn1_spnego_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_gssapi_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_krb5_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pkcs12_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pkcs8_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pkcs9_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pkinit_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pku2u_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_spnego_asn1.c
 )
 
 add_darling_static_library(heim_com_err FAT SOURCES
@@ -290,17 +291,17 @@ add_darling_static_library(heim_vers FAT SOURCES
 )
 
 add_darling_static_library(heim_error-tables FAT SOURCES
-	gen/asn1_err.c
-	gen/gkrb5_err.c
-	gen/hc_err.c
-	gen/hdb_err.c
-	gen/heim_err.c
-	gen/hx509_err.c
-	gen/k524_err.c
-	gen/kadm5_err.c
-	gen/krb_err.c
-	gen/krb5_err.c
-	gen/wind_err.c
+	gen/error-tables/error-tables/asn1_err.c
+	gen/error-tables/error-tables/gkrb5_err.c
+	gen/error-tables/error-tables/hc_err.c
+	gen/error-tables/error-tables/hdb_err.c
+	gen/error-tables/error-tables/heim_err.c
+	gen/error-tables/error-tables/hx509_err.c
+	gen/error-tables/error-tables/k524_err.c
+	gen/error-tables/error-tables/kadm5_err.c
+	gen/error-tables/error-tables/krb_err.c
+	gen/error-tables/error-tables/krb5_err.c
+	gen/error-tables/error-tables/wind_err.c
 )
 
 add_darling_static_library(heim_hx509 FAT SOURCES
@@ -343,11 +344,12 @@ add_darling_static_library(heim_hcrypto FAT SOURCES
 	lib/hcrypto/dh-cdsa.c
 	lib/hcrypto/dh-sf.c
 	lib/hcrypto/dh.c
+	lib/hcrypto/ecdsa.c
 	lib/hcrypto/engine.c
 	lib/hcrypto/evp-cc.c
 	lib/hcrypto/evp.c
-	lib/hcrypto/pkcs12.c
 	lib/hcrypto/pkcs5.c
+	lib/hcrypto/pkcs12.c
 	lib/hcrypto/rsa-cdsa.c
 	lib/hcrypto/rsa-sf.c
 	lib/hcrypto/rsa.c
@@ -369,14 +371,14 @@ add_darling_static_library(heim_heimbase FAT SOURCES
 )
 
 add_darling_static_library(heim_asn1-hx509 FAT SOURCES
-	gen/asn1_cms_asn1.c
-	gen/asn1_ocsp_asn1.c
-	gen/asn1_pkcs10_asn1.c
-	gen/asn1_rfc2459_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_cms_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_ocsp_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_pkcs10_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_rfc2459_asn1.c
 )
 
 add_darling_static_library(heim_asn1-digest FAT SOURCES
-	gen/asn1_digest_asn1.c
+	gen/asn1-generate-template/asn1-generate-template/asn1_digest_asn1.c
 )
 
 set(FRAMEWORK_HEIMDAL_VERSION "A")
@@ -396,13 +398,13 @@ add_framework(Heimdal
 
 	SOURCES
 		base/test_base.c
-		gen/sym_hcrypto.c
-		gen/sym_hx509.c
-		gen/sym_krb5.c
-		gen/sym_pkinit.c
-		gen/sym_roken.c
-		gen/sym_asn1.c
-		gen/sym_base.c
+		gen/build-export-data/sym_hcrypto.c
+		gen/build-export-data/sym_hx509.c
+		gen/build-export-data/sym_krb5.c
+		gen/build-export-data/sym_pkinit.c
+		gen/build-export-data/sym_roken.c
+		gen/build-export-data/sym_asn1.c
+		gen/build-export-data/sym_base.c
 
 	DEPENDENCIES
 		system
@@ -414,7 +416,8 @@ add_framework(Heimdal
 		CFNetwork
 		icucore
 		heimdal-asn1
-		#libnetwork # missing
+		libnetwork
+		bsm.0
 
 		# Static libs
 		heim_heimcred
@@ -436,7 +439,7 @@ add_framework(Heimdal
 make_fat(Heimdal)
 
 target_link_options(Heimdal PRIVATE
-	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/heimdal.exp
+	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/build-export-data/heimdal.exp
 )
 
 install(TARGETS heimdal-asn1 DESTINATION libexec/darling/usr/lib)
@@ -456,7 +459,7 @@ add_framework(CommonAuth
 	VERSION ${FRAMEWORK_COMMONAUTH_VERSION}
 
 	SOURCES
-		gen/ntlm_err.c
+		gen/error-tables/error-tables/ntlm_err.c
 		lib/krb5/data.c
 		lib/krb5/error_string.c
 		lib/krb5/store_emem.c
@@ -484,7 +487,7 @@ add_framework(CommonAuth
 )
 
 target_link_options(CommonAuth PRIVATE
-	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/commonauth.exp
+	-Wl,-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/gen/build-export-data/commonauth.exp
 )
 
 target_include_directories(CommonAuth PRIVATE

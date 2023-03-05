@@ -32,7 +32,11 @@
  */
 
 #include "krb5_locl.h"
+#ifdef DARLING
+#include "heimcred.h"
+#else
 #include "HeimCred.h"
+#endif
 
 struct request {
     krb5_auth_context ac;
