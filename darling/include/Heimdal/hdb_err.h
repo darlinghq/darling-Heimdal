@@ -1,1 +1,1 @@
-../../../gen/Heimdal/hdb_err.h
+../../../gen/error-tables/hdb_err.h

@@ -1,1 +1,1 @@
-../../../gen/GSS/gssapi_krb5.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_krb5.h

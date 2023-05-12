@@ -1,1 +1,1 @@
-../../../lib/gssapi/gssapi/GSSPrivate.h
+../../../gen/gssapi-rewrite-headers/GSS/GSSPrivate.h

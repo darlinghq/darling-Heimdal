@@ -1,1 +1,1 @@
-../../../gen/Heimdal/config_plugin.h
+../../../gen/krb5-rewrite-headers/Heimdal/config_plugin.h

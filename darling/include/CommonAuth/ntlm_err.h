@@ -1,1 +1,1 @@
-../../../gen/ntlm_err.h
+../../../gen/error-tables/ntlm_err.h

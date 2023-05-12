@@ -1,1 +1,1 @@
-../../../gen/Heimdal/windc_plugin.h
+../../../gen/krb5-rewrite-headers/Heimdal/windc_plugin.h

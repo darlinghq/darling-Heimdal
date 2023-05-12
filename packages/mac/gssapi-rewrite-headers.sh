@@ -22,9 +22,18 @@ do
      perl ${SRCROOT}/packages/mac/Heimdal-ify.pl GSS "$a" ${HEIMDAL_TMPDIR}/GSS || exit 1
 done
 
+## DARLING
 for a in \
-	${HEIMDAL_TMPDIR}/gssapi_rewrite.h \
+	${DARLING_BUILD_EXPORT_DATA_DIR}/gssapi_rewrite.h \
 	;
 do
      perl ${SRCROOT}/packages/mac/Heimdal-ify.pl GSS "$a" ${HEIMDAL_TMPDIR}/GSS || exit 1
 done
+## /DARLING
+
+# for a in \
+# 	${HEIMDAL_TMPDIR}/gssapi_rewrite.h \
+# 	;
+# do
+#      perl ${SRCROOT}/packages/mac/Heimdal-ify.pl GSS "$a" ${HEIMDAL_TMPDIR}/GSS || exit 1
+# done

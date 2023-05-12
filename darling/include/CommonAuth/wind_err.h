@@ -1,1 +1,1 @@
-../../../gen/Heimdal/wind_err.h
+../../../gen/error-tables/wind_err.h

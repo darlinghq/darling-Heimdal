@@ -1,1 +1,1 @@
-../../../gen/Heimdal/spnego_asn1.h
+../../../gen/asn1-generate-template/spnego_asn1.h

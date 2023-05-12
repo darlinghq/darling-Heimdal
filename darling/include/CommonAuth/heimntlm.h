@@ -1,1 +1,1 @@
-../../../gen/CommonAuth/heimntlm.h
+../../../lib/ntlm/heimntlm.h

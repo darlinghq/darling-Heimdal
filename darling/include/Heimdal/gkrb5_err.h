@@ -1,1 +1,1 @@
-../../../gen/Heimdal/gkrb5_err.h
+../../../gen/error-tables/gkrb5_err.h

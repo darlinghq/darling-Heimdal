@@ -1,1 +1,1 @@
-../../../gen/Heimdal/cms_asn1.h
+../../../gen/asn1-generate-template/cms_asn1.h

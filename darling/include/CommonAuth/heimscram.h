@@ -1,1 +1,1 @@
-../../../gen/CommonAuth/heimscram.h
+../../../lib/ntlm/heimscram.h

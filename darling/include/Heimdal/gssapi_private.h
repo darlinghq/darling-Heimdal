@@ -1,1 +1,1 @@
-../../../lib/gssapi/gssapi/gssapi_private.h
+../../../gen/gssapi-rewrite-headers/GSS/gssapi_private.h

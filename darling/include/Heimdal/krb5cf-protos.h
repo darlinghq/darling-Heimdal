@@ -1,1 +1,1 @@
-../../../gen/Heimdal/krb5cf-protos.h
+../../../gen/krb5-rewrite-headers/Heimdal/krb5cf-protos.h

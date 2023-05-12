@@ -1,1 +1,1 @@
-../../../gen/Heimdal/heimcred.h
+../../../gen/krb5-rewrite-headers/Heimdal/heimcred.h

@@ -949,6 +949,8 @@ kcm_move(krb5_context context, krb5_ccache from, krb5_ccache to)
     }
     ret = krb5_kcm_call(context, request, NULL, NULL);
 
+    (void)kcm_close(context, from);
+
     krb5_storage_free(request);
     return ret;
 }
@@ -1363,6 +1365,9 @@ _krb5_kcm_get_initial_ticket(krb5_context context,
     krb5_error_code ret;
     krb5_storage *request;
 
+    if (id->ops == &krb5_xcc_ops || id->ops == &krb5_xcc_api_ops) {
+	return _krb5_xcc_get_initial_ticket(context, id, client, server, password);
+    } else
     if (id->ops != &krb5_kcm_ops && id->ops != &krb5_akcm_ops) {
 	krb5_set_error_message(context, EINVAL, "Cache is not a KCM cache");
 	return EINVAL;
@@ -1607,14 +1612,17 @@ krb5_kcm_get_principal_list(krb5_context context)
 	if (principalStr) {
 	    ret = krb5_ret_int32(response, &asid);
 	    if (ret == HEIM_ERR_EOF) {
+		CFRelease(principalStr);
 		ret = 0;
 		break;
 	    } if (ret) {
+		CFRelease(principalStr);
 		break;
 	    }
 
 	    ret = krb5_ret_int32(response, &endtime);
 	    if (ret) {
+		CFRelease(principalStr);
 		break;
 	    }
 
