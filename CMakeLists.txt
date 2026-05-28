@@ -11,6 +11,7 @@ add_compile_options(
 	-nostdinc
 	-includeconfig.h
 	-Wno-error=int-conversion
+	-Wno-error=incompatible-pointer-types
 )
 
 add_compile_definitions(
