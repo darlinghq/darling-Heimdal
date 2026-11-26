@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Heimdal's KCM client connects to /var/run/.heim_org.h5l.kcm-socket. The
+	  credential cache lives in the host's KCM server, so point that guest path
+	  at the host socket when the user has one. Without the socket, the job
+	  clears the guest link if one is present, so Darling still starts and
+	  applications see their usual local credential caches.
+	-->
+	<key>Label</key>
+	<string>org.darlinghq.kcm-hostsocket</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>host=/Volumes/SystemRoot/var/run/.heim_org.h5l.kcm-socket; guest=/var/run/.heim_org.h5l.kcm-socket; if [ -S &quot;$host&quot; ]; then /bin/ln -sfn &quot;$host&quot; &quot;$guest&quot;; elif [ -L &quot;$guest&quot; ]; then /bin/rm -f &quot;$guest&quot;; fi</string>
+	</array>
+</dict>
+</plist>

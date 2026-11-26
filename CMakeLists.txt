@@ -445,6 +445,11 @@ target_link_options(Heimdal PRIVATE
 
 install(TARGETS heimdal-asn1 DESTINATION libexec/darling/usr/lib)
 
+# No KCM server runs inside the prefix; clients use the host's through the
+# conditional link installed below.
+install(FILES darling/org.darlinghq.kcm-hostsocket.plist
+	DESTINATION libexec/darling/System/Library/LaunchDaemons)
+
 set(FRAMEWORK_COMMONAUTH_VERSION "A")
 
 generate_sdk_framework(CommonAuth
